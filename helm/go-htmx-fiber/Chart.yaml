@@ -1,0 +1,17 @@
+apiVersion: v2
+name: go-htmx-fiber
+description: A Helm chart for Go + Fiber + HTMX application
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - go
+  - fiber
+  - htmx
+  - web
+maintainers:
+  - name: Igor Vinicius
+    email: igor@example.com
+home: https://github.com/igorsilva-dev/go_htmx_fiber_fullstack
+sources:
+  - https://github.com/igorsilva-dev/go_htmx_fiber_fullstack

@@ -1,0 +1,13 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "go-htmx-fiber.fullname" . }}
+  labels:
+    {{- include "go-htmx-fiber.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "go-htmx-fiber.selectorLabels" . | nindent 6 }}
+{{- end }}
