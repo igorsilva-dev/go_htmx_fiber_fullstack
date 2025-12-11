@@ -21,8 +21,6 @@ require (
 require (
 	dario.cat/mergo v1.0.2 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
-	github.com/bep/godartsass/v2 v2.5.0 // indirect
-	github.com/bep/golibsass v1.2.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
@@ -31,7 +29,6 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gofiber/template v1.8.3 // indirect
 	github.com/gofiber/utils v1.1.0 // indirect
-	github.com/gohugoio/hugo v0.149.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -52,7 +49,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/spf13/afero v1.14.0 // indirect
 	github.com/spf13/cast v1.9.2 // indirect
-	github.com/tdewolff/parse/v2 v2.8.3 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.52.0 // indirect
