@@ -67,20 +67,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
+      - name: Extract metadata with semver
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}
-          flavor: |
-            latest=auto
           tags: |
+            type=semver,pattern={{version}},value=${{ needs.semantic-version.outputs.new_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.semantic-version.outputs.new_version }}
+            type=semver,pattern={{major}},value=${{ needs.semantic-version.outputs.new_version }}
             type=ref,event=branch
             type=sha,prefix={{branch}}-
             type=sha,prefix=sha-
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push image to GHCR
@@ -97,7 +95,8 @@ jobs:
           echo "✅ Docker image successfully built and pushed to GHCR"
           echo "📦 Image Repository: ghcr.io/${{ github.repository }}"
           echo "🏷️  New Version: ${{ needs.semantic-version.outputs.new_version }}"
-          echo "📋 All tags: ${{ steps.meta.outputs.tags }}"
+          echo "📋 All tags:"
+          echo "${{ steps.meta.outputs.tags }}"
 
   create-release:
     needs: [semantic-version, build-and-push]
