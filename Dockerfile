@@ -1,12 +1,12 @@
 # --- Build Stage ---
-FROM golang:1.23-alpine AS builder
+FROM golang:1.23-alpine3.20 AS builder
 
 # Set the working directory
 WORKDIR /app
 
 # Copy Go modules and source code
 COPY go.mod go.sum ./
-RUN go mod download && go mod tidy
+RUN go mod download
 
 COPY . .
 
