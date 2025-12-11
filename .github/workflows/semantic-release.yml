@@ -99,6 +99,7 @@ jobs:
     
     permissions:
       contents: write
+      packages: write
 
     steps:
       - name: Checkout code
@@ -125,15 +126,12 @@ jobs:
           helm package helm/go-htmx-fiber --destination helm/releases
           ls -la helm/releases/
 
-      - name: Login to GHCR for Helm
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
-
       - name: Push Helm chart to GHCR
         run: |
           VERSION=${{ needs.semantic-version.outputs.new_version }}
-          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz oci://ghcr.io/${{ github.repository_owner }}/charts
-          echo "✅ Helm chart pushed to ghcr.io/${{ github.repository_owner }}/charts/go-htmx-fiber:${VERSION}"
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz oci://ghcr.io/${{ github.repository_owner }}
+          echo "✅ Helm chart pushed to oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber:${VERSION}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -156,7 +154,7 @@ jobs:
             
             ## Helm Chart
             
-            **Chart Repository:** `oci://ghcr.io/${{ github.repository_owner }}/charts`
+            **Chart Repository:** `oci://ghcr.io/${{ github.repository_owner }}`
             
             ### Add the Helm repository:
             ```bash
@@ -165,16 +163,14 @@ jobs:
             
             ### Install with Helm:
             ```bash
-            helm install my-release oci://ghcr.io/${{ github.repository_owner }}/charts/go-htmx-fiber \
-              --version ${{ needs.semantic-version.outputs.new_version }} \
-              --set image.tag=${{ needs.semantic-version.outputs.new_version }}
+            helm install my-release oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber \
+              --version ${{ needs.semantic-version.outputs.new_version }}
             ```
             
             ### Or upgrade existing release:
             ```bash
-            helm upgrade my-release oci://ghcr.io/${{ github.repository_owner }}/charts/go-htmx-fiber \
-              --version ${{ needs.semantic-version.outputs.new_version }} \
-              --set image.tag=${{ needs.semantic-version.outputs.new_version }}
+            helm upgrade my-release oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber \
+              --version ${{ needs.semantic-version.outputs.new_version }}
             ```
           files: helm/releases/go-htmx-fiber-${{ needs.semantic-version.outputs.new_version }}.tgz
           draft: false
