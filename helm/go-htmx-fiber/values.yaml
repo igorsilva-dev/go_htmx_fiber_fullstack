@@ -84,8 +84,8 @@ externalSecrets:
 
 # EKS Pod Identity configuration
 podIdentity:
-  enabled: false               # Set to true to create Pod Identity association
-  roleArn: ""                  # IAM role ARN: arn:aws:iam::ACCOUNT_ID:role/role-name
+  enabled: true               # Set to true to create Pod Identity association
+  roleArn: "arn:aws:iam::770646238304:role/got-htmx-fiber-role"                  # IAM role ARN: arn:aws:iam::ACCOUNT_ID:role/role-name
 
 # Service Account configuration
 serviceAccount:
