@@ -47,3 +47,14 @@ Selector labels
 app.kubernetes.io/name: {{ include "go-htmx-fiber.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "go-htmx-fiber.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "go-htmx-fiber.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}

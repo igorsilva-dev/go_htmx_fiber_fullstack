@@ -1,0 +1,12 @@
+{{- if and .Values.podIdentity.enabled .Values.podIdentity.roleArn }}
+apiVersion: eks.amazonaws.com/v1beta1
+kind: PodIdentityAssociation
+metadata:
+  name: {{ include "go-htmx-fiber.fullname" . }}-pod-identity
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "go-htmx-fiber.labels" . | nindent 4 }}
+spec:
+  serviceAccountName: {{ include "go-htmx-fiber.serviceAccountName" . }}
+  roleArn: {{ .Values.podIdentity.roleArn }}
+{{- end }}

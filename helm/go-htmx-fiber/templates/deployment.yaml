@@ -24,6 +24,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      serviceAccountName: {{ include "go-htmx-fiber.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -46,14 +47,18 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
+        envFrom:
+        {{- if .Values.configMap.enabled }}
+        - configMapRef:
+            name: {{ include "go-htmx-fiber.fullname" . }}
+        {{- end }}
+        {{- if .Values.externalSecrets.enabled }}
+        - secretRef:
+            name: {{ include "go-htmx-fiber.fullname" . }}-secrets
+        {{- end }}
         env:
         {{- with .Values.env }}
           {{- toYaml . | nindent 12 }}
-        {{- end }}
-        {{- if .Values.configMap.enabled }}
-        envFrom:
-        - configMapRef:
-            name: {{ include "go-htmx-fiber.fullname" . }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
