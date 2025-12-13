@@ -58,7 +58,7 @@ configMap:
   data:
     APP_ENV: production
     APP_PORT: "8080"
-    DB_HOST: postgres.default.svc.cluster.local
+    DB_HOST: incode-test.ce3q4gk2218i.us-east-1.rds.amazonaws.com
     DB_PORT: "5432"
     DB_NAME: fiber_htmx_db
     DB_SSLMODE: require
