@@ -70,7 +70,7 @@ externalSecrets:
     name: aws-secrets-store    # Name of your SecretStore resource
     kind: SecretStore          # or ClusterSecretStore
   refreshInterval: 15m
-  secretPrefix: go-htmx-fiber/ # Prefix for secrets in AWS Secrets Manager
+  secretPrefix: development/go-htmx-fiber/ # Prefix for secrets in AWS Secrets Manager
   # Secrets to retrieve from AWS Secrets Manager
   secrets:
     - key: csrf_secret
