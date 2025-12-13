@@ -82,16 +82,11 @@ externalSecrets:
     - key: db_password
       name: DB_PASSWORD
 
-# EKS Pod Identity configuration
-podIdentity:
-  enabled: true               # Set to true to create Pod Identity association
-  roleArn: "arn:aws:iam::770646238304:role/got-htmx-fiber-role"                  # IAM role ARN: arn:aws:iam::ACCOUNT_ID:role/role-name
-
 # Service Account configuration
 serviceAccount:
   create: true
-  name: ""  # If not set, defaults to fullname
-  annotations: {}  # Additional annotations (e.g., for Pod Identity)
+  name: "go-htmx-fiber-sa"
+  annotations: {} 
 
 autoscaling:
   enabled: true

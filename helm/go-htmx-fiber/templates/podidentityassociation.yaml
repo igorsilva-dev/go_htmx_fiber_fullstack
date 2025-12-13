@@ -1,12 +1,7 @@
-{{- if and .Values.podIdentity.enabled .Values.podIdentity.roleArn }}
-apiVersion: eks.amazonaws.com/v1beta1
-kind: PodIdentityAssociation
-metadata:
-  name: {{ include "go-htmx-fiber.fullname" . }}-pod-identity
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "go-htmx-fiber.labels" . | nindent 4 }}
-spec:
-  serviceAccountName: {{ include "go-htmx-fiber.serviceAccountName" . }}
-  roleArn: {{ .Values.podIdentity.roleArn }}
-{{- end }}
+# Pod Identity Association is created separately outside of this chart
+# Use AWS CLI to create it:
+# aws eks create-pod-identity-association \
+#   --cluster-name <cluster-name> \
+#   --namespace <namespace> \
+#   --service-account <service-account-name> \
+#   --role-arn <iam-role-arn>
