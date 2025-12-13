@@ -39,19 +39,19 @@ resources:
     cpu: 250m
     memory: 256Mi
 
-# livenessProbe:
-#   httpGet:
-#     path: /
-#     port: 80
-#   initialDelaySeconds: 30
-#   periodSeconds: 10
+livenessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
 
-# readinessProbe:
-#   httpGet:
-#     path: /
-#     port: 80
-#   initialDelaySeconds: 15
-#   periodSeconds: 5
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 5
 
 # ConfigMap for non-sensitive environment variables
 configMap:
