@@ -10,6 +10,9 @@ RUN go mod download
 
 COPY . .
 
+# Tidy modules before building
+RUN go mod tidy
+
 # Build the application
 # -ldflags="-w -s" strips debug information, reducing binary size
 # CGO_ENABLED=0 creates a static binary

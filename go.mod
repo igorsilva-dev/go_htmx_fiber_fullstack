@@ -3,7 +3,7 @@
 // ------------------------------------------------------------------
 module github.com/ahsanmubariz/go_htmx_fiber_boilerplate
 
-go 1.23.0
+go 1.23
 
 require (
 	github.com/go-playground/validator/v10 v10.19.0
@@ -41,6 +41,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.52.0 // indirect
