@@ -142,8 +142,11 @@ jobs:
           curl -L https://github.com/regclient/regclient/releases/download/v0.6.0/regctl-linux-amd64 -o /tmp/regctl
           chmod +x /tmp/regctl
           
-          # Tag as latest
-          /tmp/regctl image copy oci://${REGISTRY}/${CHART_NAME}:${VERSION} oci://${REGISTRY}/${CHART_NAME}:latest
+          # Configure regctl with credentials
+          /tmp/regctl registry login ${REGISTRY} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+          
+          # Tag as latest (regctl uses registry URLs without oci:// prefix)
+          /tmp/regctl image copy ${REGISTRY}/${CHART_NAME}:${VERSION} ${REGISTRY}/${CHART_NAME}:latest
           
           echo "✅ Helm chart pushed successfully"
           echo "📦 Repository: oci://${REGISTRY}/${CHART_NAME}"
