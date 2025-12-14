@@ -129,31 +129,44 @@ jobs:
       - name: Push Helm chart to GHCR
         run: |
           VERSION=${{ needs.semantic-version.outputs.new_version }}
-          REGISTRY=ghcr.io/${{ github.repository_owner }}
           CHART_NAME=go-htmx-fiber
+          CHART_FILE="helm/releases/${CHART_NAME}-${VERSION}.tgz"
           
-          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+          # Checkout gh-pages branch
+          git fetch origin gh-pages
+          mkdir -p /tmp/gh-pages
+          cd /tmp/gh-pages
+          git clone --branch gh-pages --depth 1 https://github.com/${{ github.repository }}.git .
           
-          # Push with version tag to OCI registry
-          helm push helm/releases/${CHART_NAME}-${VERSION}.tgz oci://${REGISTRY}
+          # Copy the new chart package
+          cp "${GITHUB_WORKSPACE}/${CHART_FILE}" .
           
-          # For Docker-style latest tag support, we need to use regctl
-          # Install regctl
-          curl -L https://github.com/regclient/regclient/releases/download/v0.6.0/regctl-linux-amd64 -o /tmp/regctl
-          chmod +x /tmp/regctl
+          # Generate or update the index.yaml
+          helm repo index . --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
           
-          # Configure regctl with credentials
-          /tmp/regctl registry login ${REGISTRY} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+          # Display the index
+          echo "Generated index.yaml:"
+          cat index.yaml
           
-          # Tag as latest (regctl uses registry URLs without oci:// prefix)
-          /tmp/regctl image copy ${REGISTRY}/${CHART_NAME}:${VERSION} ${REGISTRY}/${CHART_NAME}:latest
+          # Commit and push changes
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "chore: Release Helm chart version ${VERSION}" || echo "No changes to commit"
+          git push origin gh-pages
           
-          echo "✅ Helm chart pushed successfully"
-          echo "📦 Repository: oci://${REGISTRY}/${CHART_NAME}"
-          echo "🏷️  Tags: ${VERSION}, latest"
+          echo "✅ Helm chart published to GitHub Pages"
+          echo "📦 Repository URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
           echo ""
-          echo "To install specific version:"
-          echo "  helm install my-release oci://${REGISTRY}/${CHART_NAME} --version ${VERSION}"
+          echo "To add this repository:"
+          echo "  helm repo add go-htmx-fiber https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          echo "  helm repo update"
+          echo ""
+          echo "To install the latest version:"
+          echo "  helm install my-release go-htmx-fiber/${CHART_NAME}"
+          echo ""
+          echo "To install a specific version:"
+          echo "  helm install my-release go-htmx-fiber/${CHART_NAME} --version ${VERSION}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -176,29 +189,26 @@ jobs:
             
             ## Helm Chart
             
-            **Chart Repository:** `oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber`
+            **Chart Repository:** `https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/`
             
-            ### Login to Helm registry:
+            ### Add the Helm repository:
             ```bash
-            echo $GITHUB_TOKEN | helm registry login ghcr.io -u <USERNAME> --password-stdin
+            helm repo add go-htmx-fiber https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+            helm repo update
             ```
             
-            ### Pull the chart:
+            ### Install the chart:
             ```bash
-            helm pull oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber \
-              --version ${{ needs.semantic-version.outputs.new_version }}
-            ```
+            # Install the latest version
+            helm install my-release go-htmx-fiber/go-htmx-fiber
             
-            ### Install with Helm:
-            ```bash
-            helm install my-release oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber \
-              --version ${{ needs.semantic-version.outputs.new_version }}
+            # Or install a specific version
+            helm install my-release go-htmx-fiber/go-htmx-fiber --version ${{ needs.semantic-version.outputs.new_version }}
             ```
             
             ### Or upgrade existing release:
             ```bash
-            helm upgrade my-release oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber \
-              --version ${{ needs.semantic-version.outputs.new_version }}
+            helm upgrade my-release go-htmx-fiber/go-htmx-fiber --version ${{ needs.semantic-version.outputs.new_version }}
             ```
           files: helm/releases/go-htmx-fiber-${{ needs.semantic-version.outputs.new_version }}.tgz
           draft: false
