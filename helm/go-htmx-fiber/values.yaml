@@ -64,29 +64,45 @@ configMap:
   data:
     APP_ENV: production
     APP_PORT: "8080"
-    DB_HOST: incode-test.ce3q4gk2218i.us-east-1.rds.amazonaws.com
-    DB_PORT: "5432"
-    DB_NAME: postgres
     DB_SSLMODE: require
+    
 
 # External Secrets configuration (AWS Secrets Manager)
 externalSecrets:
   enabled: true
   secretStore:
-    name: aws-secrets-store    # Name of your SecretStore resource
-    kind: SecretStore          # or ClusterSecretStore
+    name: aws-secrets-store    
+    kind: SecretStore
   refreshInterval: 15m
-  secretPrefix: development/go-htmx-fiber/ # Prefix for secrets in AWS Secrets Manager
-  # Secrets to retrieve from AWS Secrets Manager
+  secretPrefix: development/go-htmx-fiber/   
+  
+  jsonSecret:
+    enabled: true
+    secretKey: dbCredentials
+    secretName: db_credentials
+    fields:
+      - jsonKey: dbCredentials
+        jsonField: hostname
+        envName: DB_HOST
+      - jsonKey: dbCredentials
+        jsonField: port
+        envName: DB_PORT
+      - jsonKey: dbCredentials
+        jsonField: username
+        envName: DB_USER
+      - jsonKey: dbCredentials
+        jsonField: password
+        envName: DB_PASSWORD
+      - jsonKey: dbCredentials
+        jsonField: database
+        envName: DB_NAME  
+  
   secrets:
     - key: csrf_secret
       name: CSRF_SECRET
     - key: session_key
       name: SESSION_KEY
-    - key: db_user
-      name: DB_USER
-    - key: db_password
-      name: DB_PASSWORD
+    
 
 # Service Account configuration
 serviceAccount:
