@@ -71,7 +71,7 @@ configMap:
 externalSecrets:
   enabled: true
   
-  # Database credentials secret
+  
   database-credentials:
     refreshInterval: 15m
     secretStoreRef:
@@ -90,7 +90,7 @@ externalSecrets:
       - extract:
           key: development/go-htmx-fiber/db_credentials
   
-  # Application secrets
+  
   app-secrets:
     refreshInterval: 15m
     secretStoreRef:
@@ -98,14 +98,12 @@ externalSecrets:
       kind: SecretStore
     target:
       name: go-htmx-fiber-app-secrets
-      template:
-        data:
-          CSRF_SECRET: "{{ .csrf_secret }}"
-          SESSION_KEY: "{{ .session_key }}"
-    dataFrom:
-      - extract:
+    data:
+      - secretKey: CSRF_SECRET
+        remoteRef:
           key: development/go-htmx-fiber/csrf_secret
-      - extract:
+      - secretKey: SESSION_KEY
+        remoteRef:
           key: development/go-htmx-fiber/session_key
     
 
