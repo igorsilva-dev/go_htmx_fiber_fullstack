@@ -120,6 +120,9 @@ jobs:
         with:
           version: latest
 
+      - name: Install crane for image tagging
+        uses: imjasonh/setup-crane@v0.3
+
       - name: Package Helm chart
         run: |
           mkdir -p helm/releases
@@ -129,14 +132,23 @@ jobs:
       - name: Push Helm chart to GHCR
         run: |
           VERSION=${{ needs.semantic-version.outputs.new_version }}
+          REGISTRY=oci://ghcr.io/${{ github.repository_owner }}
+          
           echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
-          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz oci://ghcr.io/${{ github.repository_owner }}
+          
+          # Push with version tag
+          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz ${REGISTRY}
+          
+          # Tag as latest using crane
+          crane copy ${REGISTRY}/go-htmx-fiber:${VERSION} ${REGISTRY}/go-htmx-fiber:latest || true
+          
           echo "✅ Helm chart pushed successfully"
-          echo "📦 Repository: oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber"
-          echo "🏷️  Version: ${VERSION}"
+          echo "📦 Repository: ${REGISTRY}/go-htmx-fiber"
+          echo "🏷️  Tags: ${VERSION}, latest"
           echo ""
           echo "To pull the chart:"
-          echo "  helm pull oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber --version ${VERSION}"
+          echo "  helm pull ${REGISTRY}/go-htmx-fiber --version ${VERSION}"
+          echo "  helm pull ${REGISTRY}/go-htmx-fiber --version latest"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
