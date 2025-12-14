@@ -70,7 +70,7 @@ func NewServer(cfg *config.Config, db *gorm.DB) *Server {
 	// 3. Create the standard net/http middleware chain.
 	csrfMiddleware := csrf.Protect(
 		[]byte(cfg.CSRFSecret),
-		csrf.Secure(cfg.Env == "production"),
+		csrf.Secure(false), // Disable secure flag for ALB HTTP routing
 		csrf.Path("/"),
 		csrf.HttpOnly(true),
 		csrf.RequestHeader("X-CSRF-Token"), // For HTMX
