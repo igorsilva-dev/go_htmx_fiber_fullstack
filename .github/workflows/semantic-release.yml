@@ -130,11 +130,13 @@ jobs:
         run: |
           VERSION=${{ needs.semantic-version.outputs.new_version }}
           echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
-          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber:${VERSION}
-          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber:latest
-          echo "✅ Helm chart pushed to:"
-          echo "   - oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber:${VERSION}"
-          echo "   - oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber:latest"
+          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz oci://ghcr.io/${{ github.repository_owner }}
+          echo "✅ Helm chart pushed successfully"
+          echo "📦 Repository: oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber"
+          echo "🏷️  Version: ${VERSION}"
+          echo ""
+          echo "To pull the chart:"
+          echo "  helm pull oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber --version ${VERSION}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -157,11 +159,17 @@ jobs:
             
             ## Helm Chart
             
-            **Chart Repository:** `oci://ghcr.io/${{ github.repository_owner }}`
+            **Chart Repository:** `oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber`
             
-            ### Add the Helm repository:
+            ### Login to Helm registry:
             ```bash
-            helm registry login ghcr.io -u <USERNAME> -p <GITHUB_TOKEN>
+            echo $GITHUB_TOKEN | helm registry login ghcr.io -u <USERNAME> --password-stdin
+            ```
+            
+            ### Pull the chart:
+            ```bash
+            helm pull oci://ghcr.io/${{ github.repository_owner }}/go-htmx-fiber \
+              --version ${{ needs.semantic-version.outputs.new_version }}
             ```
             
             ### Install with Helm:
