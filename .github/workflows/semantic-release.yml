@@ -120,9 +120,6 @@ jobs:
         with:
           version: latest
 
-      - name: Install crane for image tagging
-        uses: imjasonh/setup-crane@v0.3
-
       - name: Package Helm chart
         run: |
           mkdir -p helm/releases
@@ -132,23 +129,28 @@ jobs:
       - name: Push Helm chart to GHCR
         run: |
           VERSION=${{ needs.semantic-version.outputs.new_version }}
-          REGISTRY=oci://ghcr.io/${{ github.repository_owner }}
+          REGISTRY=ghcr.io/${{ github.repository_owner }}
+          CHART_NAME=go-htmx-fiber
           
           echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
           
-          # Push with version tag
-          helm push helm/releases/go-htmx-fiber-${VERSION}.tgz ${REGISTRY}
+          # Push with version tag to OCI registry
+          helm push helm/releases/${CHART_NAME}-${VERSION}.tgz oci://${REGISTRY}
           
-          # Tag as latest using crane
-          crane copy ${REGISTRY}/go-htmx-fiber:${VERSION} ${REGISTRY}/go-htmx-fiber:latest || true
+          # For Docker-style latest tag support, we need to use regctl
+          # Install regctl
+          curl -L https://github.com/regclient/regclient/releases/download/v0.6.0/regctl-linux-amd64 -o /tmp/regctl
+          chmod +x /tmp/regctl
+          
+          # Tag as latest
+          /tmp/regctl image copy oci://${REGISTRY}/${CHART_NAME}:${VERSION} oci://${REGISTRY}/${CHART_NAME}:latest
           
           echo "✅ Helm chart pushed successfully"
-          echo "📦 Repository: ${REGISTRY}/go-htmx-fiber"
+          echo "📦 Repository: oci://${REGISTRY}/${CHART_NAME}"
           echo "🏷️  Tags: ${VERSION}, latest"
           echo ""
-          echo "To pull the chart:"
-          echo "  helm pull ${REGISTRY}/go-htmx-fiber --version ${VERSION}"
-          echo "  helm pull ${REGISTRY}/go-htmx-fiber --version latest"
+          echo "To install specific version:"
+          echo "  helm install my-release oci://${REGISTRY}/${CHART_NAME} --version ${VERSION}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
