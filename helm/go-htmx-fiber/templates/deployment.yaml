@@ -53,8 +53,12 @@ spec:
             name: {{ include "go-htmx-fiber.fullname" . }}
         {{- end }}
         {{- if .Values.externalSecrets.enabled }}
+        {{- range $name, $config := .Values.externalSecrets }}
+        {{- if ne $name "enabled" }}
         - secretRef:
-            name: {{ include "go-htmx-fiber.fullname" . }}-secrets
+            name: {{ $config.target.name }}
+        {{- end }}
+        {{- end }}
         {{- end }}
         env:
         {{- with .Values.env }}

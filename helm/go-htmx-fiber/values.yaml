@@ -70,38 +70,43 @@ configMap:
 # External Secrets configuration (AWS Secrets Manager)
 externalSecrets:
   enabled: true
-  secretStore:
-    name: aws-secrets-store    
-    kind: SecretStore
-  refreshInterval: 15m
-  secretPrefix: development/go-htmx-fiber/   
   
-  jsonSecret:
-    enabled: true
-    secretKey: dbCredentials
-    secretName: db_credentials
-    fields:
-      - jsonKey: dbCredentials
-        jsonField: hostname
-        envName: DB_HOST
-      - jsonKey: dbCredentials
-        jsonField: port
-        envName: DB_PORT
-      - jsonKey: dbCredentials
-        jsonField: username
-        envName: DB_USER
-      - jsonKey: dbCredentials
-        jsonField: password
-        envName: DB_PASSWORD
-      - jsonKey: dbCredentials
-        jsonField: database
-        envName: DB_NAME  
+  # Database credentials secret
+  database-credentials:
+    refreshInterval: 15m
+    secretStoreRef:
+      name: aws-secrets-store
+      kind: SecretStore
+    target:
+      name: go-htmx-fiber-db-secrets
+      template:
+        data:
+          DB_HOST: "{{ .hostname }}"
+          DB_PORT: "{{ .port }}"
+          DB_USER: "{{ .username }}"
+          DB_PASSWORD: "{{ .password }}"
+          DB_NAME: "{{ .database }}"
+    dataFrom:
+      - extract:
+          key: development/go-htmx-fiber/db_credentials
   
-  secrets:
-    - key: csrf_secret
-      name: CSRF_SECRET
-    - key: session_key
-      name: SESSION_KEY
+  # Application secrets
+  app-secrets:
+    refreshInterval: 15m
+    secretStoreRef:
+      name: aws-secrets-store
+      kind: SecretStore
+    target:
+      name: go-htmx-fiber-app-secrets
+      template:
+        data:
+          CSRF_SECRET: "{{ .csrf_secret }}"
+          SESSION_KEY: "{{ .session_key }}"
+    dataFrom:
+      - extract:
+          key: development/go-htmx-fiber/csrf_secret
+      - extract:
+          key: development/go-htmx-fiber/session_key
     
 
 # Service Account configuration
