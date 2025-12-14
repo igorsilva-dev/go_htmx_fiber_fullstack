@@ -126,7 +126,7 @@ jobs:
           helm package helm/go-htmx-fiber --destination helm/releases
           ls -la helm/releases/
 
-      - name: Push Helm chart to GHCR
+      - name: Push Helm chart to GitHub Pages
         run: |
           VERSION=${{ needs.semantic-version.outputs.new_version }}
           CHART_NAME=go-htmx-fiber
@@ -136,7 +136,7 @@ jobs:
           git fetch origin gh-pages
           mkdir -p /tmp/gh-pages
           cd /tmp/gh-pages
-          git clone --branch gh-pages --depth 1 https://github.com/${{ github.repository }}.git .
+          git clone --branch gh-pages --depth 1 https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
           
           # Copy the new chart package
           cp "${GITHUB_WORKSPACE}/${CHART_FILE}" .
