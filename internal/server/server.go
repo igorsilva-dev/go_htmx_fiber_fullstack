@@ -74,6 +74,7 @@ func NewServer(cfg *config.Config, db *gorm.DB) *Server {
 		csrf.Path("/"),
 		csrf.HttpOnly(true),
 		csrf.RequestHeader("X-CSRF-Token"), // For HTMX
+		csrf.FieldName("gorilla.csrf.Token"), // For form submissions
 	)
 
 	// Convert our internal Fiber app to a standard http.Handler.
