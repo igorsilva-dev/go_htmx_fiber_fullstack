@@ -88,7 +88,7 @@ externalSecrets:
           DB_NAME: "{{ .database }}"
     dataFrom:
       - extract:
-          key: development/go-htmx-fiber/db_credentials
+          key: development/go-htmx-fiber/database_credentials
   
   
   app-secrets:
