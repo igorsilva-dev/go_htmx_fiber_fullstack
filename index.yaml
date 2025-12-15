@@ -2,8 +2,29 @@ apiVersion: v1
 entries:
   go-htmx-fiber:
   - apiVersion: v2
+    appVersion: 0.0.38
+    created: "2025-12-15T11:20:50.667155011Z"
+    description: A Helm chart for Go + Fiber + HTMX application
+    digest: bb0bd1114d3c210772fba4dea74cbe82f2d81e2e4604225d08139ec5e7e7667d
+    home: https://github.com/igorsilva-dev/go_htmx_fiber_fullstack
+    keywords:
+    - go
+    - fiber
+    - htmx
+    - web
+    maintainers:
+    - email: igor@example.com
+      name: Igor Vinicius
+    name: go-htmx-fiber
+    sources:
+    - https://github.com/igorsilva-dev/go_htmx_fiber_fullstack
+    type: application
+    urls:
+    - https://igorsilva-dev.github.io/go_htmx_fiber_fullstack/go-htmx-fiber-0.0.38.tgz
+    version: 0.0.38
+  - apiVersion: v2
     appVersion: 0.0.37
-    created: "2025-12-15T11:13:22.699296897Z"
+    created: "2025-12-15T11:20:50.666705178Z"
     description: A Helm chart for Go + Fiber + HTMX application
     digest: 0770560ade8a2d4cb653739ff1623a6e1bb27071cd2967a6cb5a7e9aa573ed36
     home: https://github.com/igorsilva-dev/go_htmx_fiber_fullstack
@@ -24,7 +45,7 @@ entries:
     version: 0.0.37
   - apiVersion: v2
     appVersion: 0.0.36
-    created: "2025-12-15T11:13:22.698863197Z"
+    created: "2025-12-15T11:20:50.666264101Z"
     description: A Helm chart for Go + Fiber + HTMX application
     digest: fee76a8d91ec112b20eb557dc3c4dd15e9ef9d3db2c4dc77580f0e79e47bf4b9
     home: https://github.com/igorsilva-dev/go_htmx_fiber_fullstack
@@ -45,7 +66,7 @@ entries:
     version: 0.0.36
   - apiVersion: v2
     appVersion: 0.0.35
-    created: "2025-12-15T11:13:22.698310163Z"
+    created: "2025-12-15T11:20:50.665706333Z"
     description: A Helm chart for Go + Fiber + HTMX application
     digest: fef8468b3d4fbe40bb4e60b05996b7bc20613421d48f7249db05a28b17c6100a
     home: https://github.com/igorsilva-dev/go_htmx_fiber_fullstack
@@ -66,7 +87,7 @@ entries:
     version: 0.0.35
   - apiVersion: v2
     appVersion: 0.0.34
-    created: "2025-12-15T11:13:22.697743447Z"
+    created: "2025-12-15T11:20:50.66515721Z"
     description: A Helm chart for Go + Fiber + HTMX application
     digest: 5ee465d8c03cf6335a4adf36b2eb7969f7d101b0ec03107861a26985d61dcbb9
     home: https://github.com/igorsilva-dev/go_htmx_fiber_fullstack
@@ -85,4 +106,4 @@ entries:
     urls:
     - https://igorsilva-dev.github.io/go_htmx_fiber_fullstack/go-htmx-fiber-0.0.34.tgz
     version: 0.0.34
-generated: "2025-12-15T11:13:22.696671126Z"
+generated: "2025-12-15T11:20:50.664459439Z"
