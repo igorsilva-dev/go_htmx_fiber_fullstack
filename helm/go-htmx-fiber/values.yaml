@@ -65,47 +65,6 @@ configMap:
     APP_ENV: production
     APP_PORT: "8080"
     DB_SSLMODE: require
-    
-
-# External Secrets configuration (AWS Secrets Manager)
-# externalSecrets:
-#   enabled: true
-  
-  
-#   database-credentials:
-#     refreshInterval: 15m
-#     secretStoreRef:
-#       name: aws-secrets-store
-#       kind: SecretStore
-#     target:
-#       name: go-htmx-fiber-db-secrets
-#       template:
-#         data:
-#           DB_HOST: "{{ .hostname }}"
-#           DB_PORT: "{{ .port }}"
-#           DB_USER: "{{ .username }}"
-#           DB_PASSWORD: "{{ .password }}"
-#           DB_NAME: "{{ .database }}"
-#     dataFrom:
-#       - extract:
-#           key: development/go-htmx-fiber/database_credentials
-  
-  
-#   app-secrets:
-#     refreshInterval: 15m
-#     secretStoreRef:
-#       name: aws-secrets-store
-#       kind: SecretStore
-#     target:
-#       name: go-htmx-fiber-app-secrets
-#     data:
-#       - secretKey: CSRF_SECRET
-#         remoteRef:
-#           key: development/go-htmx-fiber/csrf_secret
-#       - secretKey: SESSION_KEY
-#         remoteRef:
-#           key: development/go-htmx-fiber/session_key
-    
 
 # Service Account configuration
 serviceAccount:
@@ -126,7 +85,18 @@ podDisruptionBudget:
 
 nodeSelector: {}
 
-affinity: {}
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAntiAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - go-htmx-fiber
+          topologyKey: topology.kubernetes.io/zone
 
 tolerations: {}
 
